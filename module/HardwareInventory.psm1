@@ -39,12 +39,20 @@ function Initialize-InventoryFiles{
 }
 
 function Get-HardwareFromDatabase($Type,$Name){
- (Get-Content $script:HardwareDbPath -Raw|ConvertFrom-Json).$Type|? Name -ieq $Name
+ $db = Get-Content $script:HardwareDbPath -Raw | ConvertFrom-Json
+ if ($db.$Type) {
+  $db.$Type | Where-Object { $_.Name -ieq $Name }
+ }
 }
 
 function Search-HardwareDatabase($SearchTerm,$Type){
- $db=Get-Content $script:HardwareDbPath -Raw|ConvertFrom-Json
- if($Type){$db.$Type}else{@($db.PSObject.Properties.Value|%{$_})}|? Name -match $SearchTerm
+ $db = Get-Content $script:HardwareDbPath -Raw | ConvertFrom-Json
+ $items = if($Type) {
+  @($db.$Type)
+ } else {
+  @($db.PSObject.Properties.Value | ForEach-Object { $_ })
+ }
+ $items | Where-Object { $_.Name -match $SearchTerm }
 }
 
 function Add-HardwareToDatabase($Type,$Name,[hashtable]$Specs){
