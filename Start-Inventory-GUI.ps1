@@ -2,6 +2,11 @@
 # GUI launcher for Portable Hardware Inventory
 # Project root anchor – do not move this file
 
+if (-not $Global:InventoryInitialized) {
+    Write-Host "ERROR: Inventory not initialized. Launch Start-Inventory.ps1." -ForegroundColor Red
+    exit 1
+}
+
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
