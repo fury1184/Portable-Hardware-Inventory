@@ -1,2 +1,4 @@
 #user data
-/data
+/data/*
+# keep hardware db in repo
+!/data/hardware_db.json   
