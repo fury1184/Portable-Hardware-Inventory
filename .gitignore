@@ -1,4 +1,4 @@
 #user data
 /data/*
-# keep hardware db in repo
-!/data/hardware_db.json   
+# keep custom db in repo
+!/data/user_db.json   
