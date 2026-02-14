@@ -193,10 +193,11 @@ function Add-ComponentItem {
     # Save to CSV
     $headers = $ComponentHeaders[$ComponentType]
     $row = $headers | ForEach-Object { 
-        if ($item.ContainsKey($_)) { $item[$_] } else { "" }
+        $val = if ($item.ContainsKey($_)) { "$($item[$_])" } else { "" }
+        "`"$($val -replace '"','""')`""
     }
     
-    $row -join "," | Add-Content $csvPath -Encoding UTF8
+    ($row -join ",") | Add-Content $csvPath -Encoding UTF8
     
     Write-Host ""
     Write-Host "$ComponentType added successfully! (ID: $($item["ID"]))" -ForegroundColor Green
@@ -397,12 +398,18 @@ function Edit-ComponentItem {
     $csvContent += ($headers -join ",")
     
     foreach ($i in $updatedItems) {
-        $row = $headers | ForEach-Object { $i.$_ }
+        $row = $headers | ForEach-Object { 
+            $val = "$($i.$_)"
+            "`"$($val -replace '"','""')`""
+        }
         $csvContent += ($row -join ",")
     }
     
     # Add edited item
-    $row = $headers | ForEach-Object { $newItem[$_] }
+    $row = $headers | ForEach-Object { 
+        $val = "$($newItem[$_])"
+        "`"$($val -replace '"','""')`""
+    }
     $csvContent += ($row -join ",")
     
     $csvContent | Set-Content $csvPath -Encoding UTF8
@@ -463,7 +470,10 @@ function Remove-ComponentItem {
     $csvContent += ($headers -join ",")
     
     foreach ($i in $updatedItems) {
-        $row = $headers | ForEach-Object { $i.$_ }
+        $row = $headers | ForEach-Object { 
+            $val = "$($i.$_)"
+            "`"$($val -replace '"','""')`""
+        }
         $csvContent += ($row -join ",")
     }
     
